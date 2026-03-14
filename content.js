@@ -1,47 +1,53 @@
 // content.js
 
-// Polyfill for browser compatibility
-window.browser = (function () {
-  return window.browser || window.chrome;
-})();
+const browser = globalThis.browser || globalThis.chrome;
 
 let debounceTimeout = null;
 
-// Function to get the selected text
+// Get selected text
 function getSelectedText() {
   return window.getSelection().toString().trim();
 }
-
-// Event listener for mouseup event
 document.addEventListener('mouseup', () => {
   clearTimeout(debounceTimeout);
+
   debounceTimeout = setTimeout(() => {
     const selectedText = getSelectedText();
+
     if (selectedText.length > 0 && selectedText.split(/\s+/).length === 1) {
-      // Send the selected text to the background script
-      if (browser.runtime) {
-        browser.runtime.sendMessage({
-          action: "getDefinition",
-          word: selectedText
-        }).catch(err => {
-          console.error("Error sending message to background script:", err.message);
-        });
+
+      if (!browser?.runtime?.id || !browser?.runtime?.sendMessage) {
+        return;
       }
+
+      try {
+        browser.runtime.sendMessage(
+          {
+            action: "getDefinition",
+            word: selectedText
+          },
+          () => {
+            if (browser.runtime.lastError) {
+              console.warn("Message failed:", browser.runtime.lastError.message);
+            }
+          }
+        );
+      } catch (err) {
+        console.warn("Message send failed:", err);
+      }
+
     }
   }, 200);
 });
-
-// Listener for messages from the background script
 browser.runtime.onMessage.addListener((request) => {
   if (request.action === "displayDefinition") {
     displayDefinitionTooltip(request.definition);
   }
 });
 
-// Function to display the definition in a tooltip
+// Tooltip
 function displayDefinitionTooltip(definition) {
-  // Remove any existing tooltips to avoid multiple tooltips
-  const existingTooltip = document.getElementById('wordDefinitionTooltip');
+  const existingTooltip = document.getElementById("wordDefinitionTooltip");
   if (existingTooltip) existingTooltip.remove();
 
   const selection = window.getSelection();
@@ -50,8 +56,9 @@ function displayDefinitionTooltip(definition) {
   const range = selection.getRangeAt(0);
   const rect = range.getBoundingClientRect();
 
-  const tooltip = document.createElement('div');
-  tooltip.id = 'wordDefinitionTooltip';
+  const tooltip = document.createElement("div");
+  tooltip.id = "wordDefinitionTooltip";
+
   tooltip.style.cssText = `
     position: absolute;
     top: ${window.scrollY + rect.bottom + 8}px;
@@ -67,12 +74,14 @@ function displayDefinitionTooltip(definition) {
     cursor: pointer;
     word-break: break-word;
   `;
+
   tooltip.textContent = definition || "Definition not found.";
 
   document.body.appendChild(tooltip);
 
-  // Dismiss the tooltip when clicked
-  tooltip.addEventListener('click', () => tooltip.remove());
-  // Optionally, dismiss after a few seconds
-  setTimeout(() => { if (tooltip.parentNode) tooltip.remove(); }, 5000);
+  tooltip.addEventListener("click", () => tooltip.remove());
+
+  setTimeout(() => {
+    if (tooltip.parentNode) tooltip.remove();
+  }, 5000);
 }

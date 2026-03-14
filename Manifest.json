@@ -1,20 +1,34 @@
 {
   "manifest_version": 3,
-  "name": "Word Definition",
-  "version": "1.0",
-  "description": " the extension enables users to highlight any word on a webpage and instantly see its dictionary definition in a tooltip, enhancing reading and comprehension without leaving the page..",
-  "permissions": ["activeTab"],
-  "host_permissions": ["*://www.dictionaryapi.com/*"],  
-  "icons": {                        
-    "128": "icons/icon128.png"
+  "name": "Word Definition Tooltip",
+  "version": "1.0.0",
+  "description": "Highlight any word on a webpage to instantly view its dictionary definition in a tooltip, helping users improve reading and comprehension without leaving the page.",
+
+  "permissions": [
+    "activeTab"
+  ],
+
+  "host_permissions": [
+    "https://www.dictionaryapi.com/*"
+  ],
+
+  "background": {
+    "service_worker": "background.js"
   },
+
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content.js"]
+      "js": ["content.js"],
+      "run_at": "document_idle"
     }
   ],
-  "background": {
-    "service_worker": "background.js"
+
+  "icons": {
+    "128": "icons/icon128.png"
+  },
+
+  "action": {
+    "default_title": "Word Definition"
   }
 }

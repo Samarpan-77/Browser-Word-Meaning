@@ -1,11 +1,9 @@
 // background.js
 
 // Polyfill for browser compatibility
-window.browser = (function () {
-  return window.browser || window.chrome;
-})();
+const browser = globalThis.browser || globalThis.chrome;
 
-const MERRIAM_WEBSTER_API_KEY = process.env.MERRIAM_WEBSTER_API_KEY;
+const MERRIAM_WEBSTER_API_KEY = "API-KEY"; // Replace with your actual API key
 const MW_API_URL_BASE = 'https://www.dictionaryapi.com/api/v3/references/sd3/json/';
 
 browser.runtime.onStartup.addListener(() => {});
