@@ -1,17 +1,17 @@
-# Word Definition Browser Extension
+﻿# Word Definition Browser Extension
 
-A browser extension that allows users to highlight any word on a webpage and instantly view its dictionary definition in a tooltip, enhancing reading and comprehension without leaving the page.
+A browser extension that lets users highlight a single word on any webpage and instantly view its dictionary definition in a tooltip, enhancing reading and comprehension without leaving the page.
 
 ## Features
 
-- **Instant Definitions**: Highlight any word on any webpage to see its definition in a tooltip.
-- **Merriam-Webster Integration**: Uses the Merriam-Webster Dictionary API for accurate and reliable definitions.
-- **Non-Intrusive**: Works seamlessly without disrupting your browsing experience.
-- **Cross-Site Compatibility**: Functions on all websites.
+- **Instant Definitions**: Highlight a single word to see its definition in a tooltip.
+- **Merriam-Webster Integration**: Uses the Merriam-Webster Dictionary API for reliable definitions and suggestions.
+- **Non-Intrusive**: Tooltip auto-dismisses after a few seconds or on click.
+- **Cross-Site Compatibility**: Works on all websites.
 
 ## Installation
 
-### For Chrome
+### Chrome / Chromium
 1. Download or clone this repository.
 2. Open Chrome and navigate to `chrome://extensions/`.
 3. Enable "Developer mode" in the top right corner.
@@ -31,13 +31,10 @@ A browser extension that allows users to highlight any word on a webpage and ins
 This extension uses the Merriam-Webster Dictionary API. To set up your API key:
 
 1. Obtain an API key from [Merriam-Webster Developer Center](https://dictionaryapi.com/).
-2. Create a `.env` file in the root directory of the project (if not already present).
-3. Add your API key to the `.env` file:
+2. Open `background.js` and replace the placeholder key:
    ```
-   MERRIAM_WEBSTER_API_KEY=your_api_key_here
+   const MERRIAM_WEBSTER_API_KEY = "your_api_key_here";
    ```
-4. If you're using a build tool that supports environment variables (e.g., Webpack), ensure it's configured to load the `.env` file.
-5. For production builds, replace `process.env.MERRIAM_WEBSTER_API_KEY` in `background.js` with your actual API key, as browser extensions don't have access to `process.env`.
 
 **Note**: Since this is a client-side browser extension, the API key will be visible in the extension's code. Keep this in mind for security considerations.
 
@@ -45,9 +42,9 @@ This extension uses the Merriam-Webster Dictionary API. To set up your API key:
 
 1. Install the extension as described above.
 2. Navigate to any webpage.
-3. Highlight (select) any word by double-clicking or dragging your mouse over it.
-4. A tooltip will appear showing the word's definition.
-5. Click outside the tooltip to dismiss it.
+3. Highlight (select) a single word by double-clicking or dragging your mouse over it.
+4. A tooltip will appear showing the word's definition or suggestions.
+5. Click the tooltip to dismiss it, or wait a few seconds for it to auto-close.
 
 ## Development
 
@@ -58,14 +55,14 @@ This extension uses the Merriam-Webster Dictionary API. To set up your API key:
 ### File Structure
 ```
 WordDefinitionExtension/
-├── background.js          # Service worker for API calls
-├── content.js             # Content script for tooltip injection
-├── Manifest.json          # Extension manifest
-├── .env                   # Environment variables (API key)
-├── .gitignore             # Git ignore file
-├── icons/                 # Extension icons
-│   └── icon128.png
-└── README.md              # This file
+|-- background.js          # Service worker for API calls
+|-- content.js             # Content script for tooltip injection
+|-- Manifest.json          # Extension manifest
+|-- .env                   # Environment variables (optional)
+|-- .gitignore             # Git ignore file
+|-- icons/                 # Extension icons
+|   `-- icon128.png
+`-- README.md              # This file
 ```
 
 ### Building and Testing
@@ -99,11 +96,10 @@ This extension is not affiliated with Merriam-Webster. Please refer to Merriam-W
 ## Support
 
 If you encounter any issues or have questions:
-- Check the [Issues](https://github.com/yourusername/WordDefinitionExtension/issues) page on GitHub.
 - Ensure your API key is correctly configured.
 - Verify that the extension has the necessary permissions.
 
 ---
 
-**Version**: 1.0
-**Last Updated**: 2026#
+**Version**: 1.0.0
+**Last Updated**: March 15, 2026
